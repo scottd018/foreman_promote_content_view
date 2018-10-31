@@ -27,10 +27,10 @@ Required variables are as follows:
 # Sample Playbook
 
 ```
-- hosts: localhost
+- hosts:        localhost
   gather_facts: false
-  connection: local
-  become: false
+  connection:   local
+  become:       false
 
   roles:
 
