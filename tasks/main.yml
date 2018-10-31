@@ -1,0 +1,24 @@
+- name: 'get the organization object'
+  include_tasks: 'get_satellite_object.yml'
+  vars:
+    object_endpoint:      "{{ organization_endpoint }}"
+    object_name:          "{{ foreman_organization }}"
+    object_type:          'organization'
+    object_filter:        'name'
+    object_filter_method: '='
+
+- name: 'get the content view object'
+  include_tasks: 'get_satellite_object.yml'
+  vars:
+    object_endpoint:      "{{ organization_endpoint }}/{{ organization_response.json.results[0].id }}/content_views"
+    object_name:          "{{ foreman_content_view }}"
+    object_type:          'content_view'
+    object_filter:        'name'
+    object_filter_method: '='
+
+- name: 'promote the content view through the lifecycle'
+  include_tasks: 'promote_content_view.yml'
+  vars:
+    foreman_life_env_name:        "{{ item }}"
+    foreman_content_view_version: "{{ content_view_response.json.results[0].versions[-1].id }}"
+  with_items: "{{ foreman_life_env_path }}"

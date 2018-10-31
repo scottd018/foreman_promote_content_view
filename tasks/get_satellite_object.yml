@@ -1,0 +1,20 @@
+- name: "get satellite object [{{ object_name }}] of type [{{ object_type }}] from satellite via endpoint [{{ object_endpoint }}]"
+  uri:
+    method:           GET
+    user:             "{{ foreman_user }}"
+    password:         "{{ foreman_password }}"
+    force_basic_auth: true
+    follow_redirects: all
+    status_code:      200
+    url:              "https://{{ foreman_server }}/{{ object_endpoint }}"
+    body:             "search={{ object_filter }}{{ object_filter_method }}{{ object_name }}"
+    validate_certs:   false
+  register: "{{ object_type }}_response"
+  when:
+    - object_name != none
+
+- debug:
+    var: "{{ object_type }}_response"
+  when:
+    - debug
+    - "{{ object_type }}_response is defined"

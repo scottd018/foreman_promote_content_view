@@ -1,0 +1,24 @@
+- name: 'wait for task completion'
+  uri:
+    method:           GET
+    user:             "{{ foreman_user }}"
+    password:         "{{ foreman_password }}"
+    force_basic_auth: true
+    follow_redirects: all
+    status_code:      200,201
+    timeout:          "{{ foreman_api_timeout }}"
+    url:              "https://{{ foreman_server }}/foreman_tasks/api/tasks/{{ foreman_task_uuid }}"
+    validate_certs:   false
+  register: publish_status
+  retries:  "{{ foreman_publish_retry_limit }}"
+  delay:    "{{ foreman_publish_retry_delay }}"
+  until:
+    - publish_status.json
+    - publish_status.json.result
+    - publish_status.json.result == 'success'
+
+- name: 'debug publish_status'
+  debug:
+    var: publish_status
+  when:
+    - debug

@@ -1,0 +1,17 @@
+dependencies: []
+
+galaxy_info:
+  author: 'scottd018'
+  description: 'Promote a new Foreman/Satellite Content View Version throughout a pre-defined lifecycle'
+  license: 'license (GPLv3)'
+  min_ansible_version: '2.6'
+  platforms:
+  - name: 'EL'
+    versions:
+    - 7
+  galaxy_tags:
+  - foreman
+  - satellite
+  - sat6
+  - rhel
+  - cloud

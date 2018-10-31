@@ -1,0 +1,30 @@
+- name: 'get lifecycle environment object from satellite api'
+  include_tasks: 'get_satellite_object.yml'
+  vars:
+    object_endpoint:      "{{ organization_endpoint }}/{{ organization_response.json.results[0].id }}/environments"
+    object_name:          "{{ foreman_life_env_name }}"
+    object_type:          'life_env'
+    object_filter:        'name'
+    object_filter_method: '='
+
+- name: "promote content view [{{ foreman_content_view }}] to [{{ foreman_life_env_name }}]"
+  uri:
+    method:           POST
+    user:             "{{ foreman_user }}"
+    password:         "{{ foreman_password }}"
+    force_basic_auth: true
+    follow_redirects: all
+    status_code:      200,201,202
+    timeout:          "{{ foreman_api_timeout }}"
+    url:              "https://{{ foreman_server }}//katello/api/content_view_versions/{{ foreman_content_view_version }}/promote"
+    validate_certs:   false
+    body_format:      json
+    body:
+      environment_id:                  "{{ life_env_response.json.results[0].id }}"
+      description:                     "Ansible Promoted at {{ '%Y-%m-%d %H:%M:%S' | strftime }}"
+      force_yum_metadata_regeneration: true
+  register: promote_response
+
+- include_tasks: 'wait_for_task_completion.yml'
+  vars:
+    foreman_task_uuid: "{{ promote_response.json.id }}"

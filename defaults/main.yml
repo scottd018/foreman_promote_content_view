@@ -1,0 +1,8 @@
+debug: false
+
+foreman_api_timeout: 60
+
+foreman_publish_retry_delay: 30
+foreman_publish_retry_limit: 60
+
+organization_endpoint: 'katello/api/organizations'
